@@ -1,6 +1,20 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-    <h3>Store/Product view</h3>
-    <p>Hello Product, how are you! </p>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-lg-4">
+            <img class="thumbnail" src="{% static 'images/placeholder.png' %}" >
+            <div class="box-element product">
+                <h6><strong>{{product.name}}</strong></h6>
+                <hr>
+                <button class="btn btn-outline-secondary add-btn">Add to cart</button>
+                <a class ="btn btn-outline-success" href="#">View</a>
+                <h4 style=" display: inline-block; float: right;"> 
+                    ${{product.price}}</h4>
+            </div>
+        </div>
+        {% endblock %}
+    
+    </div>
 {% endblock content %}

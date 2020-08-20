@@ -1,5 +1,62 @@
 {% extends 'store/main.html' %}
 {% load static %}
 {% block content %}
-    <h2>Hello checkout</h2>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="box-element" id="from-wrapper">
+            <form class="form">
+                <div id="user-info">
+                    <div class="form-field">
+                        <input required class="from-control" type="text" name="name" placeholder="Name..">
+                    </div>
+                    <div class="form-field">
+                        <input required class="from-control" type="email" name="email" placeholder="Email..">
+                    </div>
+
+                    
+
+                </div>
+                <div class="shipping-info">
+                    <hr>
+                    <p>Shipping Information: </p>
+                    <hr>
+                    <div class="form-field">
+                        <input type="text" class="form-control" name="address" placeholder="Address..">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" class="form-control" name="city" placeholder="City...">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" class="form-control" name="state" placeholder="State..">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" class="form-control" name="zipcode" placeholder="Zip Code...">
+                    </div>
+                    <div class="form-field">
+                        <input type="text" class="form-control" name="Country" placeholder="Country...">
+                    </div>
+
+                </div>
+                <hr>
+                <input id="from-button" class="btn btn-success btn-block" type="submit" value="Continue">
+            </form>
+
+        </div>
+
+        <br>
+        <div class="box-element hidden" id="payment-info">
+            <small>Payment method</small>
+        </div>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="box-element">
+            <a href="{% url 'cart' %}" class="btn btn-outline-dark">&#x2190; Back to cart</a>
+
+        </div>
+
+    </div>
+</div>
+    
 {% endblock content %}
