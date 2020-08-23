@@ -1,3 +1,2 @@
-db.sqlite3
-manage.py
-ecommerce/settings.py
+.manage.py
+.ecommerce/settings.py
