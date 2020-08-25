@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-lg-6">
         <div class="box-element" id="from-wrapper">
-            <form class="form">
+            <form id="form">
                 <div id="user-info">
                     <div class="form-field">
                         <input required class="from-control" type="text" name="name" placeholder="Name..">
@@ -13,11 +13,9 @@
                     <div class="form-field">
                         <input required class="from-control" type="email" name="email" placeholder="Email..">
                     </div>
-
-                    
-
                 </div>
-                <div class="shipping-info">
+
+                <div id="shipping-info">
                     <hr>
                     <p>Shipping Information: </p>
                     <hr>
@@ -47,6 +45,7 @@
         <br>
         <div class="box-element hidden" id="payment-info">
             <small>Payment method</small>
+            <button id="make-payment"> Make Payment</button>
         </div>
 
     </div>
@@ -59,7 +58,7 @@
             {% for item in items %}
             <div class="cart-row">
                 <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
-                <div style="flex:2"><p>{{item.product.name}}</p></div>
+                <div style="flex:2"><p>`{{item.product.name}}</p></div>
                 <div style="flex:1"><p>${{item.product.price|floatformat:2}}</p></div>
                 <div style="flex:1"><p>x{{item.quantity}}</p></div>
             </div>
@@ -70,5 +69,89 @@
 
     </div>
 </div>
+
+    <script type="text/javascript">
+        let shipping  = '{{order.shipping}}' ;
+        let total = '{{order.get_cart_total}}' ;
+
+        if(shipping == 'False'){
+            document.getElementById('shipping-info').innerHTML = '';
+        }
+        if (user != 'AnonymousUser'){
+             document.getElementById('user-info').innerHTML = ''; 
+         }
+
+        if (shipping == 'False' && user != 'AnonymousUser'){
+		//Hide entire form if user is logged in and shipping is false
+            document.getElementById('form-wrapper').classList.add("hidden");
+        //Show payment if logged in user wants to buy an item that does not require shipping
+		    document.getElementById('payment-info').classLisst.remove("hidden");
+        }
+        
+        let form = document.getElementById('form') ;
+        form.addEventListener('submit' ,function(e){
+            console.log('Form Submitted...');
+            document.getElementById('from-button').classList.add('hidden');
+            document.getElementById('payment-info').classList.remove('hidden');
+            e.preventDefault() ;
+        })
+
+
+        document.getElementById('make-payment').addEventListener('click', submitFromData);
+        
+        function submitFromData(){
+            console.log('Payment button clicked');
+
+            let userFormData = {
+                'name': null,
+                'email':null,
+                'total':total,
+            }
+            let shippingInfo = {
+                'address':null,
+                'city':null,
+                'state':null,
+                'zipcode':null,
+                
+            }
+
+            if( shipping != 'False'){
+                shippingInfo.address = form.address.value ;
+                shippingInfo.city    = form.city.value;
+                shippingInfo.state   = form.state.value ;
+                shippingInfo.zipcode = form.zipcode.value ;
+                
+            }
+
+            if( user == 'AnonymousUser'){
+                userFormData.name = form.name.value ;
+                userFormData.email = form.email.value ;
+            }
+
+            console.log('Shipping Info -:- ', shippingInfo)
+            console.log('User Info:', userFormData)
+            
+	    	let url = "/process_order/"
+	    	fetch(url, {
+	    		method:'POST',
+	    		headers:{
+	    			'Content-Type':'applicaiton/json',
+	    			'X-CSRFToken':csrftoken,
+	    		}, 
+	    		body:JSON.stringify({'form':userFormData, 'shipping':shippingInfo}),
+	    		
+	    	})
+	    	.then((response) => response.json())
+	    	.then((data) => {
+				  console.log('Success:', data);
+				  alert('Transaction completed');  
+				  window.location.href = "{% url 'store' %}" 
+
+				})
+	    }
+
+
+    </script>
+   
     
 {% endblock content %}
